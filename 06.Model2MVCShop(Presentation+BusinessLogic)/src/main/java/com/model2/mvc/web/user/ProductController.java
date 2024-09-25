@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
 import com.model2.mvc.service.domain.Product;
-import com.model2.mvc.service.domain.User;
 import com.model2.mvc.service.product.ProductService;
 
 
@@ -85,7 +84,7 @@ public class ProductController {
 		// Model °ú View ¿¬°á
 		model.addAttribute("product", product);
 		
-		return "forward:/product/updateProduct.jsp";
+		return "forward:/product/updateProductView.jsp";
 	}
 	
 	@RequestMapping("/updateProduct.do")
@@ -95,20 +94,23 @@ public class ProductController {
 	
 		productService.updateProduct(product);
 		
-		int sessionId=((Product)session.getAttribute("product")).getProdNo();
+		int request=((Product)request.getAttribute("product")).getProdNo();
 		{
-			session.setAttribute("product", product);
+			request.setAttribute("product", product);
 		}
 		
-		return "redirect:/getProduct.do?prodNo="+product.getProdNo();
+		return "forward:/getProduct.do?prodNo="+product.getProdNo();
 	}
 	
 	
 	
 	@RequestMapping("/listProduct.do")
-	public String listProduct( @ModelAttribute("search") Search search , Model model , HttpServletRequest request) throws Exception{
+	public String listProduct( @ModelAttribute("search") Search search ,@RequestParam("menu") String menu, Model model , HttpServletRequest request) throws Exception{
+		
 		
 		System.out.println("/listProduct.do");
+		
+	
 		
 		if(search.getCurrentPage() ==0 ){
 			search.setCurrentPage(1);
@@ -125,6 +127,7 @@ public class ProductController {
 		model.addAttribute("list", map.get("list"));
 		model.addAttribute("resultPage", resultPage);
 		model.addAttribute("search", search);
+		model.addAttribute("menu", menu);
 		
 		return "forward:/product/listProduct.jsp";
 	}
