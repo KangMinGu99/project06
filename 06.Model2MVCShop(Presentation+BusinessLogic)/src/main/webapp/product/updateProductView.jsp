@@ -16,36 +16,38 @@
 </script>
 
 <script type="text/javascript">
-<!--
-function fncUpdateProduct(){
-	//Form 유효성 검증
- 	var name = document.detailForm.prodName.value;
-	var detail = document.detailForm.prodDetail.value;
-	var manuDate = document.detailForm.manuDate.value;
-	var price = document.detailForm.price.value;
 
-	if(name == null || name.length<1){
-		alert("상품명은 반드시 입력하여야 합니다.");
-		return;
-	}
-	if(detail == null || detail.length<1){
-		alert("상품상세정보는 반드시 입력하여야 합니다.");
-		return;
-	}
-	if(manuDate == null || manuDate.length<1){
-		alert("제조일자는 반드시 입력하셔야 합니다.");
-		return;
-	}
-	if(price == null || price.length<1){
-		alert("가격은 반드시 입력하셔야 합니다.");
-		return;
-	}
-		
-	document.detailForm.action='/updateProduct.do';
-	document.detailForm.submit();
-	
+function fncUpdateProduct() {
+    // Form 유효성 검증
+    var name = document.detailForm.prodName.value;
+    var detail = document.detailForm.prodDetail.value;
+    var manuDate = document.detailForm.manuDate.value;
+    var price = document.detailForm.price.value;
+
+    // 유효성 검증
+    if (name == null || name.length < 1) {
+        alert("상품명은 반드시 입력하여야 합니다.");
+        return;
+    }
+    if (detail == null || detail.length < 1) {
+        alert("상품상세정보는 반드시 입력하여야 합니다.");
+        return;
+    }
+    if (manuDate == null || manuDate.length < 1) {
+        alert("제조일자는 반드시 입력하셔야 합니다.");
+        return;
+    }
+    if (price == null || price.length < 1) {
+        alert("가격은 반드시 입력하셔야 합니다.");
+        return;
+    }
+
+
+
+    // 폼 전송
+    document.detailForm.action = '/updateProduct.do';
+    document.detailForm.submit();
 }
--->
 </script>
 </head>
 
@@ -103,7 +105,7 @@ function fncUpdateProduct(){
 		</td>
 		<td bgcolor="D6D6D6" width="1"></td>
 		<td class="ct_write01">
-			<input type="text" name="prodDetail" value="${product.prodDetail  }" class="ct_input_g" 
+			<input type="text" name="prodDetail" value="${product.prodDetail }" class="ct_input_g" 
 						style="width: 100px; height: 19px" maxLength="10"	minLength="6">
 		</td>
 	</tr>
@@ -143,7 +145,7 @@ function fncUpdateProduct(){
 		<td bgcolor="D6D6D6" width="1"></td>
 		<td class="ct_write01">
 			<input	type="text" name="fileName" class="ct_input_g" 
-						style="width: 200px; height: 19px" maxLength="13" value="${product.fileName }"/>
+						style="width: 200px; height: 19px" maxLength="13" value="${product.fileName}"/>
 						
 		</td>
 	</tr>

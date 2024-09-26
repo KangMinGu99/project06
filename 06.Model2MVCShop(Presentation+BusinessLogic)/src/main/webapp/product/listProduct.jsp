@@ -27,10 +27,10 @@
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
 <script type="text/javascript">
-	 function fncGetProductList(currentPage){
-	 	document.getElementById("currentPage").value = currentPage;
-	 	document.detailForm.submit();
-	 }
+	function fncGetProductList(currentPage) {
+		document.getElementById("currentPage").value = currentPage;
+		document.detailForm.submit();
+	}
 </script>
 </head>
 
@@ -38,27 +38,29 @@
 
 	<div style="width: 98%; margin-left: 10px;">
 
-		<form name="detailForm" action="/listProduct.do" method="post">
-<!-- 아래는 판매 상품 관리 or 상품검색 나오는 부분의 table -->
-			<table  border : 1px solid black;
-  border-collapse : collapse width="100%" height="37" border="0" cellpadding="0"
-				cellspacing="0">
+		<form name="detailForm" action="/listProduct.do?menu=${menu}"
+			method="post">
+			<!-- 아래는 판매 상품 관리 or 상품검색 나오는 부분의 table -->
+			<table border : 1px solid black;
+  border-collapse : collapse
+				width="100%" height="37" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td width="15" height="37">
-					<img src="/images/ct_ttl_img01.gif" width="15" height="37" />
-					</td>
-					<td background="/images/ct_ttl_img02.gif" width="100%" style="padding-left: 10px;">
+					<td width="15" height="37"><img src="/images/ct_ttl_img01.gif"
+						width="15" height="37" /></td>
+					<td background="/images/ct_ttl_img02.gif" width="100%"
+						style="padding-left: 10px;">
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
-					
+
 							<tr>
-								<c:if test='${menu ==("manage") } '>
+								<c:choose>
+									<c:when test="${menu ==('manage')}">
+										<td width="93%" class="ct_ttl01">판매 상품 관리</td>
+									</c:when>
+									<c:otherwise>
+										<td width="93%" class="ct_ttl01">상품 검색</td>
+									</c:otherwise>
+								</c:choose>
 
-									<td width="93%" class="ct_ttl01">판매 상품 관리</td>
-								</c:if>
-
-								<c:if test='${menu ==("search") } '>
-									<td width="93%" class="ct_ttl01">상품 검색</td>
-								</c:if>
 
 							</tr>
 						</table>
@@ -68,9 +70,10 @@
 				</tr>
 			</table>
 
-<!-- 아래는 상품 검색이 나오는 table -->
-			<table  border : 1px solid black;
-  border-collapse : collapse width="100%" border="0" cellspacing="0" cellpadding="0"
+			<!-- 아래는 상품 검색이 나오는 table -->
+			<table border : 1px solid red;
+  border-collapse : collapse
+				width="100%" border="0" cellspacing="0" cellpadding="0"
 				style="margin-top: 10px;">
 				<tr>
 					<td align="right"><select name="searchCondition"
@@ -100,8 +103,8 @@
 				</tr>
 			</table>
 
-<!-- 아래는 상품번호 , 상품명 등 상품에 관련된 table -->
-			<table  width="100%" border="0" cellspacing="0" cellpadding="0"
+			<!-- 아래는 상품번호 , 상품명 등 상품에 관련된 table -->
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"
 				style="margin-top: 10px;">
 				<tr>
 					<td colspan="11">전체 ${resultPage.totalCount } 건수, 현재
@@ -127,34 +130,32 @@
 				<c:set var="i" value="0" />
 				<c:forEach var="product" items="${list}" varStatus="">
 					<c:set var="i" value="${ i+1 }" />
-		
-		
-		<tr class="ct_list_pop">
+
+
+					<tr class="ct_list_pop">
 						<td align="center">${ i }</td>
 						<td></td>
-						<td>${product.prodNo}</td>			
-							<td></td>
-						<td align="center">
-						<c:if test="${not empty product}">
-							<c:choose>
-								<c:when test="${user.role == 'admin' && menu == 'manage'}">
-									<a href="/updateProductView.do?prodNo=${product.prodNo}">${product.prodName}</a>
-								</c:when>
-								<c:otherwise>
-									<a href="/getProduct.do?prodNo=${product.prodNo }">${product.prodName}</a>
-								</c:otherwise>
-							</c:choose>
-						</c:if>
-						 <c:if test="${empty user}">
-							<a href="/getProduct.do?prodNo=${product.prodNo }"></a>
-						</c:if>
-						</td>
-						
-						<td></td>		
+						<td>${product.prodNo}</td>
+						<td></td>
+						<td align="center"><c:if test="${not empty product}">
+								<c:choose>
+									<c:when test="${user.role == 'admin' && menu == 'manage'}">
+										<a href="/updateProductView.do?prodNo=${product.prodNo}">${product.prodName}</a>
+									</c:when>
+									<c:otherwise>
+										<a href="/getProduct.do?prodNo=${product.prodNo }">${product.prodName}</a>
+									</c:otherwise>
+								</c:choose>
+							</c:if> <c:if test="${empty user}">
+								<a href="/getProduct.do?prodNo=${product.prodNo }"></a>
+							</c:if></td>
+
+						<td></td>
 						<td align="left">${product.price}</td>
 						<td></td>
 						<td align="left">${product.regDate}</td>
-						
+						<td></td>
+						<td align="left">판매중</td>
 					</tr>
 					<tr>
 						<td colspan="11" bgcolor="D6D7D6" height="1"></td>
@@ -164,32 +165,30 @@
 			</table>
 
 			<!-- PageNavigation Start... -->
-			<table  width="100%" border="0" cellspacing="0" cellpadding="0"	style="margin-top:10px;">
-	<tr>
-	<td align="center">
-		   <input type="hidden" id="currentPage" name="currentPage" value=""/>
-		   
-			<c:if test="${ resultPage.currentPage <= resultPage.pageUnit }">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"
+				style="margin-top: 10px;">
+				<tr>
+					<td align="center"><input type="hidden" id="currentPage"
+						name="currentPage" value="" /> <c:if
+							test="${ resultPage.currentPage <= resultPage.pageUnit }">
 			◀ 이전
-	</c:if>
-	<c:if test="${ resultPage.currentPage > resultPage.pageUnit }">
-			<a href="javascript:fncGetProductList('${ resultPage.currentPage-1}')">◀ 이전</a>
-	</c:if>
-	
-	<c:forEach var="i"  begin="${resultPage.beginUnitPage}" end="${resultPage.endUnitPage}" step="1">
-		<a href="javascript:fncGetProductList('${ i }');">${ i }</a>
-	</c:forEach>
-	
-	<c:if test="${ resultPage.endUnitPage >= resultPage.maxPage }">
+	</c:if> <c:if test="${ resultPage.currentPage > resultPage.pageUnit }">
+							<a
+								href="javascript:fncGetProductList('${ resultPage.currentPage-1}')">◀
+								이전</a>
+						</c:if> <c:forEach var="i" begin="${resultPage.beginUnitPage}"
+							end="${resultPage.endUnitPage}" step="1">
+							<a href="javascript:fncGetProductList('${ i }');">${ i }</a>
+						</c:forEach> <c:if test="${ resultPage.endUnitPage >= resultPage.maxPage }">
 			이후 ▶
-	</c:if>
-	<c:if test="${ resultPage.endUnitPage < resultPage.maxPage }">
-			<a href="javascript:fncGetProductList('${resultPage.endUnitPage+1}')">이후 ▶</a>
-	</c:if>
-			<!--  페이지 Navigator 끝 -->
+	</c:if> <c:if test="${ resultPage.endUnitPage < resultPage.maxPage }">
+							<a
+								href="javascript:fncGetProductList('${resultPage.endUnitPage+1}')">이후
+								▶</a>
+						</c:if> <!--  페이지 Navigator 끝 -->
 
-		</form>
+						</form>
 
-	</div>
+						</div>
 </body>
 </html>

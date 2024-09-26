@@ -1,4 +1,4 @@
-package com.model2.mvc.web.user;
+package com.model2.mvc.web.product;
 
 import java.util.Map;
 
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
 import com.model2.mvc.service.domain.Product;
-import com.model2.mvc.service.domain.User;
 import com.model2.mvc.service.product.ProductService;
 
 
@@ -85,30 +84,49 @@ public class ProductController {
 		// Model 과 View 연결
 		model.addAttribute("product", product);
 		
-		return "forward:/product/updateProduct.jsp";
+		return "forward:/product/updateProductView.jsp";
 	}
 	
 	@RequestMapping("/updateProduct.do")
 	public String updateProduct( @ModelAttribute("product") Product product , Model model , HttpSession session) throws Exception{
 
 		System.out.println("/updateProduct.do");
-	
+		
+		/*
+		 * // 가격을 문자열로 가져온 후 쉼표 제거 String priceStr = product.getPrice().replace(",",
+		 * "");
+		 * 
+		 * try { // 가격을 정수로 변환 product.setPrice(Integer.parseInt(priceStr)); } catch
+		 * (NumberFormatException e) { // 변환 실패 시 오류 메시지를 모델에 추가
+		 * model.addAttribute("error", "잘못된 가격 형식입니다. 숫자만 입력해주세요.");
+		 * model.addAttribute("product", product); // 기존 제품 정보 유지 return
+		 * "forward:/product/updateProductView.jsp"; // 수정 페이지로 돌아가기 }
+		 */
+		
+		
 		productService.updateProduct(product);
 		
-		int sessionId=((Product)session.getAttribute("product")).getProdNo();
-		{
-			session.setAttribute("product", product);
-		}
+		//int request=((Product)request.getAttribute("product")).getProdNo();
+		model.addAttribute("product", product);
 		
-		return "redirect:/getProduct.do?prodNo="+product.getProdNo();
+		//request.setAttribute("product", product);
+		System.out.println(product);
+		
+		String url = "redirect:/getProduct.do?prodNo=" + String.valueOf(product.getProdNo());
+		
+		System.out.println("$$$$$$4444");
+		return url;
 	}
 	
 	
 	
 	@RequestMapping("/listProduct.do")
-	public String listProduct( @ModelAttribute("search") Search search , Model model , HttpServletRequest request) throws Exception{
+	public String listProduct( @ModelAttribute("search") Search search ,@RequestParam("menu") String menu, Model model , HttpServletRequest request) throws Exception{
+		
 		
 		System.out.println("/listProduct.do");
+		
+	
 		
 		if(search.getCurrentPage() ==0 ){
 			search.setCurrentPage(1);
@@ -125,6 +143,7 @@ public class ProductController {
 		model.addAttribute("list", map.get("list"));
 		model.addAttribute("resultPage", resultPage);
 		model.addAttribute("search", search);
+		model.addAttribute("menu", menu);
 		
 		return "forward:/product/listProduct.jsp";
 	}
